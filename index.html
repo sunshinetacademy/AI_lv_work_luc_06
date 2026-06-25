@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المحاضرة السادسة — تحسين وتأمين الـ Flow | Sunshine T Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--cream:#fdfaf3;--dark:#1a2847;--blue:#2c3e50;--gold:#c9a961;--gold-light:#f5e6c4;
+--bg:#f8f9fa;--text:#1a1a1a;--muted:#6c757d;--success:#27ae60;--danger:#c0392b;
+--warning:#e67e22;--info:#3498db;--border:#e8e3d3;--code-bg:#1a2847;--code-text:#e6c887;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;background:var(--cream);color:var(--text);line-height:1.85;font-size:17px}
+
+.cover{background:linear-gradient(160deg,#0f1b30 0%,#1a2847 40%,#2c3e50 100%);color:#fff;padding:70px 40px 55px;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 75% 15%,rgba(201,169,97,.12),transparent 55%),radial-gradient(ellipse at 25% 85%,rgba(201,169,97,.08),transparent 55%)}
+.cover-inner{max-width:1100px;margin:0 auto;position:relative;z-index:2}
+.cover-badge{display:inline-block;background:rgba(201,169,97,.15);color:var(--gold-light);padding:6px 18px;border-radius:24px;font-size:13px;font-weight:700;border:1px solid rgba(201,169,97,.3);margin-bottom:18px;letter-spacing:.5px}
+.cover h1{font-size:52px;font-weight:900;line-height:1.25;margin-bottom:16px;max-width:850px}
+.cover h1 .hl{color:var(--gold)}
+.cover-sub{font-size:21px;color:rgba(255,255,255,.82);max-width:780px;line-height:1.65;margin-bottom:36px}
+.cover-meta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gold-light);margin-bottom:32px;flex-wrap:wrap}
+.cover-meta .dot{width:4px;height:4px;background:var(--gold);border-radius:50%}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:36px;max-width:850px}
+.mini-card{background:rgba(255,255,255,.07);backdrop-filter:blur(8px);padding:14px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.1)}
+.mini-card .lbl{font-size:11px;color:var(--gold-light);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.mini-card .val{font-size:15px;font-weight:700}
+.toc-box{background:rgba(255,255,255,.04);border:1px solid rgba(201,169,97,.2);border-radius:14px;padding:22px 26px;max-width:850px}
+.toc-title{font-size:13px;color:var(--gold);font-weight:700;margin-bottom:14px;letter-spacing:1px;text-transform:uppercase}
+.toc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 22px;list-style:none}
+.toc-grid li{font-size:14px;padding:7px 0;display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.82);cursor:pointer;transition:.3s}
+.toc-grid li:hover{color:var(--gold);transform:translateX(-4px)}
+.toc-n{color:var(--gold);font-weight:900;font-size:16px;min-width:24px}
+
+.main{max-width:960px;margin:0 auto;padding:55px 28px 20px}
+.sec{margin-bottom:72px;scroll-margin-top:24px}
+.sec-head{display:flex;align-items:center;gap:18px;margin-bottom:26px;padding-bottom:18px;border-bottom:2px solid var(--border);position:relative}
+.sec-head::after{content:'';position:absolute;bottom:-2px;right:0;width:72px;height:2px;background:var(--gold)}
+.sec-num{font-size:44px;font-weight:900;color:var(--gold);line-height:1;min-width:72px}
+.sec-head h2{font-size:30px;font-weight:900;color:var(--dark);margin-bottom:4px;line-height:1.3}
+.sec-sub{font-size:15px;color:var(--muted);font-weight:600}
+.intro{font-size:17px;line-height:2;margin-bottom:22px;color:var(--text)}
+.intro strong{color:var(--dark)}
+
+.golden{background:linear-gradient(135deg,#fdf8ec,#f8edce);border-right:5px solid var(--gold);border-radius:12px;padding:26px 30px;margin:28px 0;position:relative;box-shadow:0 4px 18px rgba(201,169,97,.13)}
+.golden::before{content:'💡 القاعدة الذهبية';position:absolute;top:-13px;right:22px;background:var(--gold);color:#fff;padding:5px 16px;border-radius:20px;font-size:12px;font-weight:900;box-shadow:0 2px 8px rgba(201,169,97,.3)}
+.golden p{font-size:18px;line-height:1.9;color:var(--dark);font-weight:600;margin-top:8px}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin:26px 0}
+.card{background:#fff;border:1px solid var(--border);border-radius:13px;padding:24px;transition:.3s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:var(--gold);transform:scaleY(0);transition:.3s;transform-origin:bottom}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(26,40,71,.08);border-color:var(--gold)}
+.card:hover::before{transform:scaleY(1)}
+.card-icon{width:48px;height:48px;background:var(--gold-light);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold);margin-bottom:14px}
+.card h4{font-size:17px;color:var(--dark);margin-bottom:8px;font-weight:900}
+.card p{font-size:14px;color:var(--muted);line-height:1.7}
+
+.box{padding:18px 22px;border-radius:10px;margin:22px 0;border-right:4px solid}
+.box h5{font-size:14px;margin-bottom:7px;display:flex;align-items:center;gap:8px;font-weight:900}
+.box p{font-size:15px;line-height:1.8;color:var(--dark)}
+.box-tip{background:#e8f5e9;border-color:var(--success)}.box-tip h5{color:var(--success)}
+.box-warn{background:#fef3e7;border-color:var(--warning)}.box-warn h5{color:var(--warning)}
+.box-danger{background:#fdecea;border-color:var(--danger)}.box-danger h5{color:var(--danger)}
+.box-info{background:#e3f2fd;border-color:var(--info)}.box-info h5{color:var(--info)}
+
+.term{background:#fff;border:1px solid var(--border);border-radius:11px;padding:20px 24px;margin:14px 0;display:flex;gap:18px;align-items:flex-start;transition:.3s}
+.term:hover{border-color:var(--gold);box-shadow:0 5px 16px rgba(201,169,97,.1)}
+.term-n{min-width:150px;font-weight:900;font-size:16px;color:var(--gold)}
+.term-d{flex:1;font-size:15px;line-height:1.8;color:var(--text)}
+.term-d code{background:var(--gold-light);padding:1px 7px;border-radius:4px;color:var(--dark);font-family:'JetBrains Mono',monospace;font-size:13px}
+
+.tbl{width:100%;border-collapse:collapse;margin:22px 0;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.04)}
+.tbl thead{background:linear-gradient(135deg,var(--dark),var(--blue));color:#fff}
+.tbl th{padding:14px 18px;text-align:right;font-weight:900;font-size:14px;letter-spacing:.4px}
+.tbl td{padding:13px 18px;border-bottom:1px solid var(--border);font-size:14px;line-height:1.6}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover{background:var(--gold-light)}
+
+.steps{counter-reset:st;list-style:none;margin:22px 0}
+.steps li{counter-increment:st;padding:16px 18px 16px 0;padding-right:66px;position:relative;background:#fff;margin-bottom:10px;border-radius:10px;border:1px solid var(--border);font-size:15px;line-height:1.8;transition:.3s}
+.steps li:hover{border-color:var(--gold);box-shadow:0 4px 12px rgba(201,169,97,.12)}
+.steps li::before{content:counter(st);position:absolute;right:16px;top:50%;transform:translateY(-50%);width:36px;height:36px;background:var(--gold);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px}
+
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}
+.cmp-side{padding:24px;border-radius:12px;border:2px solid;position:relative}
+.cmp-side.ok{background:#f0f9f4;border-color:var(--success)}
+.cmp-side.no{background:#fdf2f2;border-color:var(--danger)}
+.cmp-badge{position:absolute;top:-13px;right:18px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:900;color:#fff}
+.cmp-side.ok .cmp-badge{background:var(--success)}
+.cmp-side.no .cmp-badge{background:var(--danger)}
+.cmp-side h4{font-size:17px;margin-bottom:14px;margin-top:6px;color:var(--dark);font-weight:900}
+.cmp-side ul{list-style:none}
+.cmp-side li{padding:6px 0 6px 0;padding-right:26px;position:relative;font-size:14px;line-height:1.7}
+.cmp-side.ok li::before{content:'✅';position:absolute;right:0;top:6px}
+.cmp-side.no li::before{content:'❌';position:absolute;right:0;top:6px}
+
+.ex{background:#fff;border:1px solid var(--border);border-radius:13px;padding:24px;margin:22px 0;box-shadow:0 3px 14px rgba(0,0,0,.03)}
+.ex-head{display:flex;align-items:center;gap:10px;padding-bottom:14px;margin-bottom:18px;border-bottom:2px dashed var(--border)}
+.ex-tag{background:var(--gold);color:#fff;padding:5px 12px;border-radius:7px;font-weight:900;font-size:13px}
+.ex-head h4{font-size:17px;color:var(--dark);font-weight:900}
+.ex-scene{background:var(--cream);padding:12px 16px;border-radius:8px;margin-bottom:14px;font-size:14px;line-height:1.7}
+.ex-scene strong{color:var(--gold)}
+.ex-result{background:#f0f9f4;border-right:3px solid var(--success);padding:12px 16px;border-radius:8px;margin-top:14px;font-size:14px;line-height:1.7;color:var(--dark)}
+
+.sandbox{background:var(--code-bg);color:var(--code-text);padding:20px 22px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.9;margin:14px 0;direction:ltr;text-align:left;border-right:4px solid var(--gold);white-space:pre-wrap;position:relative;overflow-x:auto}
+.sandbox .tag{color:#f59e0b;font-weight:700}
+.sandbox .c{color:#ecf0f1}
+.sandbox .kw{color:#38bdf8}
+.sandbox .str{color:#86efac}
+.sandbox-copy{position:absolute;top:8px;left:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'Cairo',sans-serif;transition:.3s}
+.sandbox-copy:hover{background:var(--gold);border-color:var(--gold)}
+
+.drill{background:linear-gradient(135deg,var(--dark),var(--blue));color:#fff;padding:26px 30px;border-radius:13px;margin:28px 0;position:relative;overflow:hidden}
+.drill::before{content:'';position:absolute;top:-40px;left:-40px;width:130px;height:130px;background:radial-gradient(circle,rgba(201,169,97,.2),transparent)}
+.drill-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;position:relative;z-index:2;flex-wrap:wrap;gap:10px}
+.drill-head h4{font-size:20px;font-weight:900;display:flex;align-items:center;gap:8px}
+.time-badge{background:var(--gold);color:#fff;padding:5px 14px;border-radius:20px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:5px}
+.drill ol{list-style:decimal;padding-right:22px;position:relative;z-index:2}
+.drill li{padding:5px 0;font-size:15px;line-height:1.8}
+
+.project-card{background:linear-gradient(135deg,#fff,#fdfaf3);border:2px solid var(--gold);border-radius:14px;padding:28px;margin:28px 0;position:relative;overflow:hidden}
+.project-card::before{content:'';position:absolute;top:0;right:0;width:6px;height:100%;background:var(--gold)}
+.project-card h4{font-size:22px;color:var(--dark);margin-bottom:14px;font-weight:900;display:flex;align-items:center;gap:10px}
+.project-card .project-num{background:var(--gold);color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px}
+
+.certificate{background:linear-gradient(135deg,#f5e6c4,#c9a961);border:4px solid var(--gold);border-radius:20px;padding:40px;margin:40px 0;text-align:center;position:relative}
+.certificate::before{content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);font-size:60px}
+.certificate h3{font-size:32px;color:var(--dark);margin-bottom:20px;font-weight:900}
+.certificate p{font-size:18px;color:var(--dark);line-height:1.8}
+
+.glossary{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin:22px 0}
+.g-item{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px;transition:.3s}
+.g-item:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 5px 14px rgba(201,169,97,.08)}
+.g-term{color:var(--gold);font-weight:900;font-size:15px;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+.g-ar{font-size:13px;color:var(--muted);margin-bottom:5px;font-style:italic}
+.g-def{font-size:13px;line-height:1.7;color:var(--text)}
+
+.quiz{background:#fff;border-radius:13px;padding:26px;margin:26px 0;border:1px solid var(--border)}
+.quiz h4{font-size:20px;color:var(--dark);margin-bottom:18px;font-weight:900;display:flex;align-items:center;gap:8px}
+.quiz-q{background:var(--cream);padding:14px 18px;border-radius:9px;margin:10px 0;border-right:3px solid var(--gold);font-size:15px;line-height:1.8}
+.quiz-q b{color:var(--gold);margin-left:8px}
+
+.hw{background:linear-gradient(135deg,#fdf8ec,#f8edce);border:2px solid var(--gold);border-radius:13px;padding:28px;margin:28px 0}
+.hw h4{font-size:20px;color:var(--dark);margin-bottom:18px;font-weight:900;display:flex;align-items:center;gap:8px}
+.hw-list{list-style:none}
+.hw-list li{padding:11px 0 11px 0;padding-right:34px;position:relative;font-size:15px;line-height:1.8;border-bottom:1px dashed var(--border)}
+.hw-list li:last-child{border-bottom:none}
+.hw-list li::before{content:'☐';position:absolute;right:0;top:11px;font-size:18px;color:var(--gold)}
+
+.footer{background:linear-gradient(135deg,var(--dark),var(--blue));color:#fff;padding:44px 36px 26px;margin-top:72px}
+.footer-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:36px;margin-bottom:26px}
+.footer h5{color:var(--gold);font-size:15px;margin-bottom:14px;font-weight:900}
+.footer p,.footer a{color:rgba(255,255,255,.78);font-size:14px;line-height:1.9;text-decoration:none;display:block;transition:.3s}
+.footer a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:20px;text-align:center;color:rgba(255,255,255,.55);font-size:13px}
+.footer-bottom .brand{color:var(--gold);font-weight:700}
+
+@media(max-width:768px){
+.cover h1{font-size:32px}.cover-sub{font-size:17px}.toc-grid{grid-template-columns:1fr}
+.sec-num{font-size:32px;min-width:52px}.sec-head h2{font-size:22px}
+.cmp{grid-template-columns:1fr}.main{padding:28px 16px 10px}
+.term{flex-direction:column;gap:6px}.term-n{min-width:auto}
+}
+@media print{.cover{break-after:page}.sec{break-inside:avoid}.drill,.golden{break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<section class="cover" id="s01">
+<div class="cover-inner">
+  <div class="cover-meta">
+    <span>Sunshine T Academy</span><span class="dot"></span>
+    <span>AI Automation for Professionals</span><span class="dot"></span>
+    <span>المحاضرة  من ٦ — الختامية</span>
+  </div>
+  <span class="cover-badge">🎓 الجلسة الختامية — من هاوي لمحترف</span>
+  <h1>تحسين وتأمين الـ Flow<br><span class="hl">2 مشاريع احترافية</span></h1>
+  <p class="cover-sub">المحاضرة الأخيرة في رحلتك. هنحوّل الـ Flows البسيطة لأنظمة أتمتة احترافية مؤمّنة، وهنبني 2 مشاريع حقيقية جاهزة للاستخدام الفوري في شغلك.</p>
+
+  <div class="info-grid">
+    <div class="mini-card"><div class="lbl">المدة</div><div class="val">⏱ ساعتان</div></div>
+    <div class="mini-card"><div class="lbl">المستوى</div><div class="val">متوسط → متقدم</div></div>
+    <div class="mini-card"><div class="lbl">الأدوات</div><div class="val">Power Automate · Claude · Excel</div></div>
+    <div class="mini-card"><div class="lbl">المدرب</div><div class="val">م. أحمد</div></div>
+  </div>
+
+  <div class="toc-box">
+    <div class="toc-title">جدول المحتويات — ١ محاور</div>
+    <ul class="toc-grid">
+      <li><span class="toc-n">٠١</span> الغلاف</li>
+      <li><span class="toc-n">٠٢</span> هاوي vs محترف</li>
+      <li><span class="toc-n">٠٣</span> Conditions متقدمة</li>
+      <li><span class="toc-n">٠٤</span> Error Handling + Approval</li>
+      <li><span class="toc-n">٠</span> Scheduled + Solution Sharing</li>
+      <li><span class="toc-n">٠٦</span> المشروع 1: شكاوى العملاء</li>
+      <li><span class="toc-n">٠٧</span> المشروع 2: التقرير الأسبوعي</li>
+      <li><span class="toc-n">٠٨</span> Post-Course Plan + شهادة</li>
+      <li><span class="toc-n">٠٩</span> قاموس المصطلحات</li>
+      <li><span class="toc-n">١٠</span> الواجب النهائي + إغلاق</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<div class="main">
+
+<!-- ===== SECTION 02 ===== -->
+<section class="sec" id="s02">
+<div class="sec-head"><div class="sec-num">٢</div><div><h2>Flow هاوي vs Flow محترف</h2><div class="sec-sub">تأسيس الدافع — الفرق بين الهواة والمحترفين</div></div></div>
+
+<p class="intro">
+  في المحاضرات السابقة بنينا Flows شغّالة. بس فيه فرق كبير بين Flow "بيشتغل" وFlow "احترافي". النهاردة هنحوّل الـ Flows بتاعتك من المستوى الأول للتاني.
+</p>
+
+<div class="golden">
+  <p>Flow بدون Conditions وError Handling = قنبلة موقوتة. هيشتغل كويس لحد ما يفشل — ووقتها مش هتعرف ليه ولا إزاي تصلحه.</p>
+</div>
+
+<div class="cmp">
+  <div class="cmp-side no">
+    <span class="cmp-badge">Flow هاوي ❌</span>
+    <h4>المشاكل</h4>
+    <ul>
+      <li>بيشتغل على كل إيميل (حتى Spam)</li>
+      <li>لو فشل → بيقف ومش بتعرف</li>
+      <li>محتاج تشغّله يدوياً</li>
+      <li>بيكرّر نفس الصف لو الإيميل اتبعت مرتين</li>
+      <li>مفيش فلتر على البيانات</li>
+    </ul>
+  </div>
+  <div class="cmp-side ok">
+    <span class="cmp-badge">Flow محترف ✅</span>
+    <h4>المميزات</h4>
+    <ul>
+      <li>بيفلتر الإيميلات (Condition)</li>
+      <li>لو فشل → بيبلغك فوراً (Error Handling)</li>
+      <li>بيشتغل لوحده في وقت محدد (Scheduled)</li>
+      <li>بيتحقق من التكرار قبل ما يضيف</li>
+      <li>فيه validation على البيانات</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box box-info">
+  <h5><i class="fas fa-lightbulb"></i> القاعدة الذهبية</h5>
+  <p>أي Flow فيه بيانات مهمة، لازم يكون فيه: <strong>Condition واحد على الأقل + Error Handling + Scheduled Trigger</strong>. ده اللي بيفرّق بين هاوي ومحترف.</p>
+</div>
+</section>
+
+<!-- ===== SECTION 03 ===== -->
+<section class="sec" id="s03">
+<div class="sec-head"><div class="sec-num">٠٣</div><div><h2>Conditions متقدمة</h2><div class="sec-sub">الدماغ اللي بيخلي الـ Flow يفكر — ١٥ دقيقة</div></div></div>
+
+<p class="intro">
+  الـ Condition هو "لو... إذن..." في الـ Flow. هو اللي بيخلي الـ Flow يتخذ قرارات ذكية بدل ما ينفذ أعمى.
+</p>
+
+<div class="golden">
+  <p>
+    Condition = دماغ الـ Flow<br>
+    من غير Condition، الـ Flow بيشتغل أعمى. مع Condition، الـ Flow بيفكر قبل ما يتصرف.
+  </p>
+</div>
+
+<div class="ex">
+  <div class="ex-head"><span class="ex-tag">مثال ١</span><h4>فلتر المرسل</h4></div>
+  <div class="ex-scene"><strong>السيناريو:</strong> عايز الـ Flow يشتغل بس لو الإيميل من عميل مسجل، مش من Spam.</div>
+  <div class="sandbox"><span class="tag">Condition:</span>
+<span class="kw">From</span> <span class="c">contains</span> <span class="str">"@customer.com"</span>
+
+<span class="tag">If Yes:</span>
+<span class="c">  → كمّل الـ Flow</span>
+
+<span class="tag">If No:</span>
+<span class="c">  → Terminate (تجاهل الإيميل)</span><button class="sandbox-copy" onclick="navigator.clipboard.writeText('Condition: From contains @customer.com\nIf Yes: كمّل الـ Flow\nIf No: Terminate')">نسخ</button></div>
+  <div class="ex-result">✅ <strong>النتيجة:</strong> الـ Flow بيتجاهل أي إيميل مش من نطاق العملاء.</div>
+</div>
+
+<div class="ex">
+  <div class="ex-head"><span class="ex-tag">مثال ٢</span><h4>فلتر الموضوع</h4></div>
+  <div class="ex-scene"><strong>السيناريو:</strong> عايز الـ Flow يتصرف differently لو الموضوع فيه "عطل طارئ".</div>
+  <div class="sandbox"><span class="tag">Condition:</span>
+<span class="kw">Subject</span> <span class="c">contains</span> <span class="str">"عطل طارئ"</span>
+
+<span class="tag">If Yes:</span>
+<span class="c">  → ابعت SMS للمهندس المسؤول</span>
+
+<span class="tag">If No:</span>
+<span class="c">  → احفظ في Excel بس</span><button class="sandbox-copy" onclick="navigator.clipboard.writeText('Condition: Subject contains عطل طارئ\nIf Yes: ابعت SMS للمهندس\nIf No: احفظ في Excel بس')">نسخ</button></div>
+  <div class="ex-result">✅ <strong>النتيجة:</strong> الأعطال الطارئة بتاخد معاملة أسرع.</div>
+</div>
+
+<div class="ex">
+  <div class="ex-head"><span class="ex-tag">مثال ٣</span><h4>فلتر المبلغ</h4></div>
+  <div class="ex-scene"><strong>السيناريو:</strong> الفواتير فوق 10,000 درهم محتاجة موافقة المدير.</div>
+  <div class="sandbox"><span class="tag">Condition:</span>
+<span class="kw">Amount</span> <span class="c">greater than</span> <span class="str">10000</span>
+
+<span class="tag">If Yes:</span>
+<span class="c">  → ابعت للمدير للموافقة</span>
+
+<span class="tag">If No:</span>
+<span class="c">  → كمّل عادي</span><button class="sandbox-copy" onclick="navigator.clipboard.writeText('Condition: Amount greater than 10000\nIf Yes: ابعت للمدير للموافقة\nIf No: كمّل عادي')">نسخ</button></div>
+  <div class="ex-result">✅ <strong>النتيجة:</strong> المبالغ الكبيرة بتاخد مراجعة إضافية.</div>
+</div>
+
+<div class="box box-tip">
+  <h5><i class="fas fa-lightbulb"></i> نصيحة عملية</h5>
+  <p>استخدم Conditions في 3 أماكن: <strong>1.</strong> فلتر المرسل، <strong>2.</strong> فلتر الموضوع/البيانات، <strong>3.</strong> التحقق من صحة البيانات قبل الحفظ.</p>
+</div>
+
+<div class="drill">
+  <div class="drill-head"><h4><i class="fas fa-dumbbell"></i> تدريب ١ — أضف Condition</h4><span class="time-badge"><i class="fas fa-clock"></i> ٥ دقايق</span></div>
+  <ol>
+    <li>افتح Flow قديم بتاعك</li>
+    <li>أضف Condition: Subject contains "عاجل"</li>
+    <li>في If No: أضف Action "Terminate"</li>
+    <li>اختبر بإيميل فيه "عاجل" وإيميل تاني مافيهوش</li>
+  </ol>
+</div>
+</section>
+
+<!-- ===== SECTION 04 ===== -->
+<section class="sec" id="s04">
+<div class="sec-head"><div class="sec-num">٠٤</div><div><h2>Error Handling + Approval Action</h2><div class="sec-sub">الاحترافية في التعامل مع الأخطاء — ١٥ دقيقة</div></div></div>
+
+<p class="intro">
+  أي Flow في الدنيا ممكن يفشل. السؤال: <strong>لما يفشل، إنت هتعرف إزاي؟ والـ Flow هيعمل إيه؟</strong>
+</p>
+
+<div class="golden">
+  <p>
+    Error Handling مش عشان الـ Flow ما يفشلش — ده مستحيل.<br>
+    Error Handling عشان لما يفشل، إنت تعرف وتصلح بسرعة.
+  </p>
+</div>
+
+<div class="ex">
+  <div class="ex-head"><span class="ex-tag">مثال ٤</span><h4>سيناريوهات الفشل الشائعة</h4></div>
+  <table class="tbl">
+    <thead><tr><th>السيناريو</th><th>السبب</th><th>الحل (Error Handling)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Excel مقفول</strong></td><td>مفتوح عند حد تاني</td><td>ابعت إشعار: "Excel مقفول — اقفله وأعد التشغيل"</td></tr>
+      <tr><td><strong>API Key منتهي</strong></td><td>Claude API بيرفض</td><td>ابعت إيميل للمدير: "API Key محتاج تجديد"</td></tr>
+      <tr><td><strong>بيانات ناقصة</strong></td><td>الإيميل مافيهوش رقم الحساب</td><td>ابعت رد للعميل: "نعتذر، نحتاج رقم الحساب"</td></tr>
+      <tr><td><strong>OneDrive ممتلئ</strong></td><td>مفيش مساحة</td><td>ابعت إشعار: "OneDrive ممتلئ — نظّف الملفات القديمة"</td></tr>
+      <tr><td><strong>Network Error</strong></td><td>الإنترنت قطع</td><td>Retry بعد 5 دقايق (Automatic Retry)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="box box-danger">
+  <h5><i class="fas fa-exclamation-circle"></i> القاعدة الذهبية</h5>
+  <p>كل Action مهم في الـ Flow، لازم يكون فيه Error Handling. لو Action فشل ومش معالج، الـ Flow كله هيوقف.</p>
+</div>
+
+<div class="ex">
+  <div class="ex-head"><span class="ex-tag">مثال ٥</span><h4>تطبيق Error Handling في Power Automate</h4></div>
+  <div class="ex-scene"><strong>السيناريو:</strong> لو Action "Add row to Excel" فشل، ابعت إشعار للمدير.</div>
+  <ol class="steps">
+    <li>بعد Action "Add row to Excel"، اضغط "Add an action"</li>
+    <li>اختار: <strong>Configure run after</strong></li>
+    <li>علّم على: <strong>"has failed"</strong> و <strong>"has timed out"</strong></li>
+    <li>أضف Action: <strong>Send an email (V3)</strong></li>
+    <li>في Body: اكتب "Flow فشل في خطوة Add row. راجع Run History."</li>
+  </ol>
+  <div class="ex-result">✅ <strong>النتيجة:</strong> لو الـ Action فشل، المدير هياخد إيميل فوراً.</div>
+</div>
+
+<h3 style="font-size:20px;margin:28px 0 14px;color:var(--dark)"> Approval Action — للموافقات الإدارية</h3>
+
+<div class="box box-info">
+  <h5><i class="fas fa-check-circle"></i> Approval Action للشركات الحكومية</h5>
+  <p>
+    <strong>المثال:</strong> فاتورة جديدة فوق 10,000 درهم<br>
+    <strong>الـ Flow:</strong><br>
+    1. Trigger: فاتورة جديدة<br>
+    2. Action 1: ابعت للمدير للموافقة<br>
+    3. Action 2: لو المدير وافق → احفظ في Excel<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;لو المدير رفض → ابعت رد للعميل<br><br>
+    <strong>💡 ده مهم جداً في الشركات الحكومية</strong> — أي معاملة مالية محتاجة موافقة.
+  </p>
+</div>
+
+<div class="drill">
+  <div class="drill-head"><h4><i class="fas fa-dumbbell"></i> تدريب ٢ — أضف Error Handling</h4><span class="time-badge"><i class="fas fa-clock"></i>  دقايق</span></div>
+  <ol>
+    <li>افتح Flow قديم</li>
+    <li>بعد أي Action مهم، أضف "Configure run after"</li>
+    <li>علّم على "has failed"</li>
+    <li>أضف Action: Send email notification</li>
+    <li>اختبر: عطّل الـ Action عمداً وشوف الإشعار</li>
+  </ol>
+</div>
+</section>
+
+<!-- ===== SECTION 05 ===== -->
+<section class="sec" id="s05">
+<div class="sec-head"><div class="sec-num">٠</div><div><h2>Scheduled Flows + Solution Sharing</h2><div class="sec-sub">الأتمتة الزمنية + مشاركة الـ Flow — ١٥ دقيقة</div></div></div>
+
+<p class="intro">
+  آخر نوع من الـ Flows: <strong>Scheduled</strong>. ده اللي بيشتغل في وقت محدد — حتى لو إنت في إجازة. ده الهدف النهائي من الكورس.
+</p>
+
+<div class="golden">
+  <p>
+    Scheduled Flow = حرية حقيقية<br>
+    مش محتاج تفتح اللابتوب. مش محتاج تتذكر. الـ Flow بيشتغل لوحده في الوقت اللي حددته.
+  </p>
+</div>
+
+<div class="ex">
+  <div class="ex-head"><span class="ex-tag">مثال ٦</span><h4>تقرير يومي تلقائي</h4></div>
+  <div class="ex-scene"><strong>السيناريو:</strong> كل يوم 8 الصبح، المدير عايز تقرير بالأمس.</div>
+  <div class="sandbox"><span class="tag">Trigger:</span> <span class="kw">Recurrence</span>
+<span class="c">  Every day at 8:00 AM</span>
+
+<span class="tag">Actions:</span>
+<span class="c">  1. Get rows from Excel (أمس)</span>
+<span class="c">  2. Claude: اعمل ملخص</span>
+<span class="c">  3. Create file: Daily_Report_[Date].pdf</span>
+<span class="c">  4. Send email to manager with attachment</span><button class="sandbox-copy" onclick="navigator.clipboard.writeText('Trigger: Recurrence - Every day at 8:00 AM\nActions:\n1. Get rows from Excel (أمس)\n2. Claude: اعمل ملخص\n3. Create file: Daily_Report_[Date].pdf\n4. Send email to manager with attachment')">نسخ</button></div>
+  <div class="ex-result">✅ <strong>النتيجة:</strong> المدير بيستلم تقرير كل يوم 8 الصبح — حتى لو إنت في إجازة.</div>
+</div>
+
+<div class="ex">
+  <div class="ex-head"><span class="ex-tag">مثال ٧</span><h4>تنظيف أسبوعي</h4></div>
+  <div class="ex-scene"><strong>السيناريو:</strong> كل جمعة 6 العصر، نظّف الملفات القديمة.</div>
+  <div class="sandbox"><span class="tag">Trigger:</span> <span class="kw">Recurrence</span>
+<span class="c">  Every Friday at 6:00 PM</span>
+
+<span class="tag">Actions:</span>
+<span class="c">  1. Get files from OneDrive (أقدم من 30 يوم)</span>
+<span class="c">  2. Move to Archive folder</span>
+<span class="c">  3. Send notification: "تم الأرشفة"</span><button class="sandbox-copy" onclick="navigator.clipboard.writeText('Trigger: Recurrence - Every Friday at 6:00 PM\nActions:\n1. Get files from OneDrive (أقدم من 30 يوم)\n2. Move to Archive folder\n3. Send notification: تم الأرشفة')">نسخ</button></div>
+  <div class="ex-result">✅ <strong>النتيجة:</strong> OneDrive دايماً نظيف ومنظم.</div>
+</div>
+
+<h3 style="font-size:20px;margin:28px 0 14px;color:var(--dark)">🆕 Solution Sharing — مشاركة الـ Flow</h3>
+
+<div class="box box-info">
+  <h5><i class="fas fa-share-alt"></i> إزاي تشارك الـ Flow مع زملائك؟</h5>
+  <p>
+    <strong>الطريقة 1: Export/Import</strong><br>
+    1. افتح الـ Flow → Export → احفظ كـ .zip<br>
+    2. ابعت الملف للزميل<br>
+    3. الزميل: Import → عدّل الـ Connections<br><br>
+    <strong>الطريقة 2: Copy to My Flows</strong><br>
+    1. افتح الـ Flow → Share → Copy to My Flows<br>
+    2. الزميل يلاقيه في My Flows بتاعه<br><br>
+    <strong>💡 الطريقة 2 أسهل لكن محتاج صلاحيات Shared</strong>
+  </p>
+</div>
+
+<div class="box box-tip">
+  <h5><i class="fas fa-lightbulb"></i> نصيحة عملية</h5>
+  <p>استخدم Scheduled Flows للمهام الدورية: تقارير يومية، تنظيف أسبوعي، تذكيرات شهرية. ده اللي بيوفرلك ساعات كل أسبوع.</p>
+</div>
+
+<div class="drill">
+  <div class="drill-head"><h4><i class="fas fa-dumbbell"></i> تدريب ٣ — ابنِ Scheduled Flow</h4><span class="time-badge"><i class="fas fa-clock"></i> ٥ دقايق</span></div>
+  <ol>
+    <li>في Power Automate: Create → Scheduled cloud flow</li>
+    <li>اضبط: Every day at 8:00 AM</li>
+    <li>أضف Action: Send yourself an email "Good morning!"</li>
+    <li>اختبر: استنى لحد ما الـ Flow يشتغل</li>
+  </ol>
+</div>
+</section>
+
+<!-- ===== SECTION 06 ===== -->
+<section class="sec" id="s06">
+<div class="sec-head"><div class="sec-num">٠٦</div><div><h2>المشروع 1: Flow شكاوى العملاء الكامل</h2><div class="sec-sub">أول مشروع احترافي — ٢٥ دقيقة</div></div></div>
+
+<p class="intro">
+  دلوقتي هنبنّي أول مشروع احترافي: <strong>Flow شكاوى العملاء</strong>. ده Flow كامل فيه كل اللي اتعلمناه: Conditions + Error Handling + AI + Excel.
+</p>
+
+<div class="project-card">
+  <h4><div class="project-num">1</div> Flow شكاوى العملاء الاحترافي</h4>
+  <p style="margin-bottom:16px"><strong>الهدف:</strong> كل شكوى توصل → AI يحللها → تحفظ في Excel → إشعار للموظف المسؤول. كل ده أوتوماتيك.</p>
+
+  <h4 style="font-size:16px;margin:16px 0 10px;color:var(--dark);font-weight:900">الخطوة 1: Trigger</h4>
+  <ol class="steps">
+    <li>When a new email arrives (Outlook)</li>
+    <li>Folder: Inbox</li>
+    <li>Subject Filter: <code>شكوى</code></li>
+  </ol>
+
+  <h4 style="font-size:16px;margin:20px 0 10px;color:var(--dark);font-weight:900">الخطوة 2: Condition 1 — فلتر المرسل</h4>
+  <ol class="steps">
+    <li>Condition: <code>From contains "@customer.com"</code></li>
+    <li>If Yes → كمّل</li>
+    <li>If No → Terminate (تجاهل)</li>
+  </ol>
+
+  <h4 style="font-size:16px;margin:20px 0 10px;color:var(--dark);font-weight:900">الخطوة 3: HTTP Action — Claude</h4>
+  <div class="sandbox"><span class="tag">POST</span> <span class="c">https://api.anthropic.com/v1/messages</span>
+
+<span class="tag">Headers:</span>
+<span class="c">  x-api-key: [API Key]</span>
+<span class="c">  anthropic-version: 2023-06-01</span>
+
+<span class="tag">Body:</span>
+<span class="tag">{</span>
+  <span class="kw">"model"</span><span class="c">: </span><span class="str">"claude-3-5-sonnet-20241022"</span><span class="c">,</span>
+  <span class="kw">"max_tokens"</span><span class="c">: </span><span class="str">1024</span><span class="c">,</span>
+  <span class="kw">"messages"</span><span class="c">: [{</span>
+    <span class="kw">"role"</span><span class="c">: </span><span class="str">"user"</span><span class="c">,</span>
+    <span class="kw">"content"</span><span class="c">: </span><span class="str">"استخرج: رقم الحساب، نوع العطل، الملخص. JSON فقط. الإيميل: @{triggerOutputs()?['body/body']}"</span>
+  <span class="c">}]</span>
+<span class="tag">}</span><button class="sandbox-copy" onclick="navigator.clipboard.writeText('{\n  \"model\": \"claude-3-5-sonnet-20241022\",\n  \"max_tokens\": 1024,\n  \"messages\": [{\n    \"role\": \"user\",\n    \"content\": \"استخرج: رقم الحساب، نوع العطل، الملخص. JSON فقط. الإيميل: @{triggerOutputs()?['body/body']}\"\n  }]\n}')">نسخ</button></div>
+
+  <h4 style="font-size:16px;margin:20px 0 10px;color:var(--dark);font-weight:900">الخطوة 4: Parse JSON</h4>
+  <ol class="steps">
+    <li>Parse JSON Action</li>
+    <li>Content: Body من HTTP Action</li>
+    <li>Schema: Generate from sample</li>
+  </ol>
+
+  <h4 style="font-size:16px;margin:20px 0 10px;color:var(--dark);font-weight:900">الخطوة 5: Condition 2 — التحقق من البيانات</h4>
+  <ol class="steps">
+    <li>Condition: <code>رقم الحساب is not empty</code></li>
+    <li>If Yes → كمّل</li>
+    <li>If No → Send email to customer: "نعتذر، نحتاج رقم الحساب"</li>
+  </ol>
+
+  <h4 style="font-size:16px;margin:20px 0 10px;color:var(--dark);font-weight:900">الخطوة 6: Add row to Excel</h4>
+  <ol class="steps">
+    <li>Add row to Complaints_Log.xlsx</li>
+    <li>Columns: التاريخ، من، رقم الحساب، نوع العطل، الملخص، الحالة = "جديد"</li>
+  </ol>
+
+  <h4 style="font-size:16px;margin:20px 0 10px;color:var(--dark);font-weight:900">الخطوة 7: Error Handling</h4>
+  <ol class="steps">
+    <li>بعد Add row: Configure run after → "has failed"</li>
+    <li>Action: Send email to admin: "Flow فشل — راجع Run History"</li>
+  </ol>
+
+  <h4 style="font-size:16px;margin:20px 0 10px;color:var(--dark);font-weight:900">الخطوة 8: Notification</h4>
+  <ol class="steps">
+    <li>Send mobile notification: "شكوى جديدة من [العميل] — نوع العطل: [النوع]"</li>
+  </ol>
+
+  <div class="ex-result">✅ <strong>النتيجة:</strong> Flow احترافي كامل. فيه Conditions، Error Handling، AI، Excel، Notifications. ده Flow محترف.</div>
+</div>
+
+<div class="drill">
+  <div class="drill-head"><h4><i class="fas fa-dumbbell"></i> تدريب ٤ — ابنِ المشروع 1</h4><span class="time-badge"><i class="fas fa-clock"></i> ٢٠ دقيقة</span></div>
+  <ol>
+    <li>اتبع الخطوات من 1 لـ 8</li>
+    <li>اختبر بإيميل تجريبي فيه "شكوى"</li>
+    <li>تأكد إن البيانات دخلت Excel صح</li>
+    <li>اختبر Error Handling: عطّل Excel وشوف الإشعار</li>
+  </ol>
+</div>
+</section>
+
+<!-- ===== SECTION 07 ===== -->
+<section class="sec" id="s07">
+<div class="sec-head"><div class="sec-num">٠٧</div><div><h2>المشروع 2: Flow التقرير الأسبوعي</h2><div class="sec-sub">ثاني مشروع احترافي — ٢٠ دقيقة</div></div></div>
+
+<p class="intro">
+  المشروع التاني: <strong>Flow التقرير الأسبوعي</strong>. ده Flow بيجمع كل حاجة في تقرير واحد للمدير.
+</p>
+
+<div class="project-card">
+  <h4><div class="project-num">2</div> Flow التقرير الأسبوعي الشامل</h4>
+  <p style="margin-bottom:16px"><strong>الهدف:</strong> كل جمعة 5 العصر → اجمع بيانات الأسبوع → Claude يعمل تقرير → ابعت للمدير.</p>
+
+  <h4 style="font-size:16px;margin:16px 0 10px;color:var(--dark);font-weight:900">الخطوة 1: Trigger</h4>
+  <ol class="steps">
+    <li>Recurrence: Every Friday at 5:00 PM</li>
+  </ol>
+
+  <h4 style="font-size:16px;margin:20px 0 10px;color:var(--dark);font-weight:900">الخطوة 2: Get Data</h4>
+  <ol class="steps">
+    <li>Get rows from Complaints_Log.xlsx (آخر 7 أيام)</li>
+    <li>Get rows from Meter_Readings.xlsx (آخر 7 أيام)</li>
+  </ol>
+
+  <h4 style="font-size:16px;margin:20px 0 10px;color:var(--dark);font-weight:900">الخطوة 3: Claude Report</h4>
+  <div class="sandbox"><span class="tag">HTTP Action to Claude</span>
+<span class="tag">Prompt:</span>
+<span class="str">"اعمل تقرير أسبوعي مختصر من البيانات دي: عدد الشكاوى، أنواع الأعطال، الاستهلاك الكلي، التحذيرات. ارجع Word document."</span><button class="sandbox-copy" onclick="navigator.clipboard.writeText('اعمل تقرير أسبوعي مختصر من البيانات دي: عدد الشكاوى، أنواع الأعطال، الاستهلاك الكلي، التحذيرات. ارجع Word document.')">نسخ</button></div>
+
+  <h4 style="font-size:16px;margin:20px 0 10px;color:var(--dark);font-weight:900">الخطوة 4: Save & Send</h4>
+  <ol class="steps">
+    <li>Create file: <code>Weekly_Report_[Date].docx</code></li>
+    <li>Send email to manager with attachment</li>
+  </ol>
+
+  <div class="ex-result">✅ <strong>النتيجة:</strong> المدير بيستلم تقرير أسبوعي كل جمعة 5 العصر — أوتوماتيك.</div>
+</div>
+
+<div class="drill">
+  <div class="drill-head"><h4><i class="fas fa-dumbbell"></i> تدريب ٥ — ابنِ المشروع 2</h4><span class="time-badge"><i class="fas fa-clock"></i> ١٥ دقيقة</span></div>
+  <ol>
+    <li>اتبع الخطوات من 1 لـ 4</li>
+    <li>اختبر: شغّل الـ Flow يدوياً (Run now)</li>
+    <li>تأكد إن التقرير اتعمل واتبعت</li>
+  </ol>
+</div>
+</section>
+
+<!-- ===== SECTION 08 ===== -->
+<section class="sec" id="s08">
+<div class="sec-head"><div class="sec-num">٠٨</div><div><h2>Post-Course Plan + شهادة الإتمام</h2><div class="sec-sub">الدعم بعد الكورس — ١٥ دقيقة</div></div></div>
+
+<p class="intro">
+  مبروك! خلّصت الكورس. دلوقتي إنت مش بس موظف بيستخدم AI — إنت محترف بيبني أنظمة أتمتة ذكية.
+</p>
+
+<div class="certificate">
+  <h3>شهادة إتمام الكورس</h3>
+  <p>تُمنح هذه الشهادة لـ</p>
+  <p style="font-size:28px;font-weight:900;margin:20px 0">[اسم المتدرب]</p>
+  <p>لإتمامه بنجاح كورس<br><strong>AI Automation for Professionals</strong><br>من Sunshine T Academy</p>
+  <p style="margin-top:30px;font-size:16px">التاريخ: [تاريخ اليوم]<br>المدرب: م. أحمد (END \ AHMED)</p>
+</div>
+
+<div class="box box-info">
+  <h5><i class="fas fa-phone"></i> 📞 خطة الدعم بعد الكورس (30 يوم)</h5>
+  <p>
+    <strong>1. مجموعة WhatsApp للدعم</strong><br>
+    - اسأل أي سؤال في الـ Flows<br>
+    - مشاركة الـ Flows مع الزملاء<br>
+    - تحديثات أسبوعية عن ميزات جديدة<br><br>
+    <strong>2. جلسة متابعة بعد أسبوعين</strong><br>
+    - مراجعة الـ Flows اللي بنيتها<br>
+    - حل أي مشاكل واجهتك<br><br>
+    <strong>3. شهادة إتمام الكورس</strong><br>
+    - شهادة معتمدة من Sunshine T Academy<br>
+    - تقدر تضيفها على LinkedIn
+  </p>
+</div>
+
+<div class="golden">
+  <p>خلّيني أذكّرك باللي اتعلمته:<br>
+  - Prompts احترافية ✅<br>
+  - Claude مع Excel ✅<br>
+  - Power Automate Logic ✅<br>
+  - أول Flow ✅<br>
+  - AI Inside Flow ✅<br>
+  - 2 مشاريع احترافية ✅</p>
+</div>
+</section>
+
+<!-- ===== SECTION 09 ===== -->
+<section class="sec" id="s09">
+<div class="sec-head"><div class="sec-num">٠</div><div><h2>قاموس المصطلحات</h2><div class="sec-sub">مرجع سريع — ١٥ مصطلح</div></div></div>
+
+<div class="glossary">
+  <div class="g-item"><div class="g-term">Condition</div><div class="g-ar">الشرط</div><div class="g-def">فلتر بيتحكم في هل الـ Action يحصل ولا لأ (If/Else).</div></div>
+  <div class="g-item"><div class="g-term">Error Handling</div><div class="g-ar">معالجة الأخطاء</div><div class="g-def">آلية التعامل مع فشل الـ Flow (إشعارات، Retry، Log).</div></div>
+  <div class="g-item"><div class="g-term">Scheduled Flow</div><div class="g-ar">Flow مجدول</div><div class="g-def">Flow بيشتغل في وقت محدد (كل يوم/أسبوع/شهر).</div></div>
+  <div class="g-item"><div class="g-term">Recurrence</div><div class="g-ar">التكرار</div><div class="g-def">Trigger بتاع الـ Scheduled Flow (Every day at 8 AM).</div></div>
+  <div class="g-item"><div class="g-term">Terminate</div><div class="g-ar">إنهاء</div><div class="g-def">Action بيوقف الـ Flow فوراً (في حالة Condition = No).</div></div>
+  <div class="g-item"><div class="g-term">Configure run after</div><div class="g-ar">ضبط التشغيل بعد</div><div class="g-def">إعداد بيحدد إمتى Action يشتغل (بعد نجاح/فشل/timeout).</div></div>
+  <div class="g-item"><div class="g-term">Retry</div><div class="g-ar">إعادة المحاولة</div><div class="g-def">محاولة تانية لو Action فشل (Automatic Retry Policy).</div></div>
+  <div class="g-item"><div class="g-term">Validation</div><div class="g-ar">التحقق</div><div class="g-def">التأكد إن البيانات صحيحة قبل المعالجة.</div></div>
+  <div class="g-item"><div class="g-term">Duplicate Check</div><div class="g-ar">فحص التكرار</div><div class="g-def">التأكد إن البيانات مش مكررة قبل الإضافة.</div></div>
+  <div class="g-item"><div class="g-term">Approval</div><div class="g-ar">موافقة</div><div class="g-def">Action بيطلب موافقة من شخص قبل ما يكمل الـ Flow.</div></div>
+  <div class="g-item"><div class="g-term">Solution Sharing</div><div class="g-ar">مشاركة الحل</div><div class="g-def">مشاركة الـ Flow مع الزملاء (Export/Import أو Copy).</div></div>
+  <div class="g-item"><div class="g-term">Scope</div><div class="g-ar">نطاق</div><div class="g-def">مجموعة Actions بتتعامل معاً كوحدة واحدة.</div></div>
+  <div class="g-item"><div class="g-term">Loop</div><div class="g-ar">حلقة تكرار</div><div class="g-def">تكرار Action على كل عنصر في قائمة (Apply to each).</div></div>
+  <div class="g-item"><div class="g-term">Variable</div><div class="g-ar">متغير</div><div class="g-def">قيمة بتتغير أثناء تشغيل الـ Flow (Counter, Text).</div></div>
+  <div class="g-item"><div class="g-term">Professional Flow</div><div class="g-ar">Flow احترافي</div><div class="g-def">Flow فيه Conditions + Error Handling + Scheduled.</div></div>
+</div>
+</section>
+
+<!-- ===== SECTION 10 ===== -->
+<section class="sec" id="s10">
+<div class="sec-head"><div class="sec-num">١٠</div><div><h2>الواجب النهائي + إغلاق</h2><div class="sec-sub">تطبيق شامل — آخر ١٠ دقايق</div></div></div>
+
+<div class="drill">
+  <div class="drill-head"><h4><i class="fas fa-trophy"></i> التدريب الختامي — 2 Projects شغّالة</h4><span class="time-badge"><i class="fas fa-clock"></i> ١٠ دقايق</span></div>
+  <ol>
+    <li>تأكد إن الـ 2 Projects شغّالة</li>
+    <li>اختبر كل Flow بإيميل/بيانات تجريبية</li>
+    <li>تأكد إن Conditions شغالة</li>
+    <li>تأكد إن Error Handling شغال</li>
+    <li>احفظ Screenshots من Run History</li>
+  </ol>
+</div>
+
+<div class="hw">
+  <h4><i class="fas fa-clipboard-check"></i> الواجب النهائي — سلّميه خلال أسبوع</h4>
+  <ul class="hw-list">
+    <li>طبّق الـ 2 Projects على شغلك الفعلي (عدّل الـ Prompts والـ Conditions)</li>
+    <li>اختبر كل Flow بـ 5 إيميلات/بيانات حقيقية</li>
+    <li>صور الـ Run history لكل Flow (نجح/فشل)</li>
+    <li>ابعت الـ 2 Projects شغّالة على WhatsApp للمراجعة</li>
+    <li>اكتب ملخص: إيه الوقت اللي وفرته في كل Flow (دقايق/أسبوع)</li>
+  </ul>
+</div>
+
+<div class="quiz">
+  <h4><i class="fas fa-question-circle"></i> أسئلة المراجعة الذاتية — نظرية</h4>
+  <div class="quiz-q"><b>١.</b> ما الفرق بين Flow هاوي وFlow محترف؟</div>
+  <div class="quiz-q"><b>٢.</b> ليه Conditions مهمة في أي Flow؟</div>
+  <div class="quiz-q"><b>٣.</b> ما هو Error Handling وليه ضروري؟</div>
+  <div class="quiz-q"><b>٤.</b> ما الفرق بين Automated Flow وScheduled Flow؟</div>
+  <div class="quiz-q"><b>٥.</b> إيه الـ 2 مشاريع اللي بنيناهم في المحاضرة دي؟</div>
+</div>
+
+<div class="quiz">
+  <h4><i class="fas fa-keyboard"></i> أسئلة المراجعة الذاتية — عملية</h4>
+  <div class="quiz-q"><b>١.</b> أضف Condition لـ Flow قديم: Subject contains "عاجل".</div>
+  <div class="quiz-q"><b>٢.</b> أضف Error Handling لـ Flow: لو فشل، ابعت إشعار.</div>
+  <div class="quiz-q"><b>٣.</b> ابنِ Scheduled Flow: كل يوم 8 الصبح ابعت إيميل لنفسك.</div>
+  <div class="quiz-q"><b>٤.</b> طبّق المشروع 1 (شكاوى العملاء) على شغلك الفعلي.</div>
+  <div class="quiz-q"><b>٥.</b> احسب الوقت اللي وفرته الـ 2 Projects في الأسبوع.</div>
+</div>
+
+<div class="box box-info">
+  <h5><i class="fas fa-graduation-cap"></i> مبروك! خلّصت الكورس 🎓</h5>
+  <p>
+    من فهم الـ AI لـ 2 مشاريع أتمتة احترافية — إنت دلوقتي مش بس موظف بيستخدم AI، إنت محترف بيبني أنظمة أتمتة ذكية.<br><br>
+    <strong>الخطوة الجاية:</strong> طبّق الـ 2 Projects على شغلك الفعلي، وابعتهم للمراجعة. بالتوفيق!
+  </p>
+</div>
+</section>
+
+</div>
+
+<footer class="footer">
+<div class="footer-grid">
+  <div>
+    <h5>عن الأكاديمية</h5>
+    <p>Sunshine T Academy — منصة تدريب متخصص في الذكاء الاصطناعي وأتمتة العمليات لموظفي الشركات. كورسات عملية 100% بدون نظريات مجردة.</p>
+  </div>
+  <div>
+    <h5>تواصل معنا</h5>
+    <a href="tel:01080680930">📞 01080680930</a>
+    <a href="#">📧 info@sunshinetacademy.com</a>
+    <a href="#">💬 WhatsApp Support</a>
+  </div>
+  <div>
+    <h5>الكورس الحالي</h5>
+    <p>AI Automation for Professionals</p>
+    <p>6 محاضرات · 12 ساعة · 1,800 جنيه</p>
+    <p>المدرب: م. أحمد (END \ AHMED)</p>
+  </div>
+</div>
+<div class="footer-bottom">© 2025 <span class="brand">Sunshine T Academy</span> · جميع الحقوق محفوظة · AI Automation for Professionals · Lecture 06 / 06 · م. أحمد</div>
+</footer>
+
+<script>
+document.querySelectorAll('.toc-grid li').forEach((item,i) => {
+  item.addEventListener('click', () => {
+    const t = document.getElementById('s0' + (i+1));
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.style.animation = 'fadeUp .5s ease'; });
+}, {threshold: 0.08});
+document.querySelectorAll('.sec').forEach(s => obs.observe(s));
+const style = document.createElement('style');
+style.textContent = '@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}';
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>
